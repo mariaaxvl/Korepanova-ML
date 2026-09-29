@@ -46,3 +46,78 @@ localhost:~# chmod +x reg
 localhost:~# ./reg banner
 localhost:~# banner "Работает!"
 ```
+## Задание 6
+```
+localhost:~# nano check_comment
+
+dir="$1"
+for f in "$dir"/*.c "$dir"/*.js "$dir"/*.py; do
+    [ -f "$f" ] || continue
+    first_line=$(head -n 1 "$f")
+    case "$f" in
+        *.py)
+            echo "$first_line" | grep -q '^[[:space:]]*#' && echo "$f: есть комментарий" || echo "$f: нет комментария"
+            ;;
+        *)
+            echo "$first_line" | grep -qE '^[[:space:]]*(//|/\*)' && echo "$f: есть комментарий" || echo "$f: нет комментария"
+            ;;
+    esac
+done
+
+localhost:~# chmod +x check_comment
+localhost:~# ./check_comment .
+```
+
+## Задание 7
+```
+localhost:~# nano find_dups
+
+path="$1"
+find "$path" -type f -exec md5sum {} + | sort | awk '
+{
+    hash=$1; $1=""; sub(/^ /,"")
+    if (hash in seen) { print seen[hash]; print $0; print "" }
+    seen[hash]=$0
+}'
+
+localhost:~# chmod +x find_dups
+localhost:~# ./find_dups .
+
+```
+
+## Задание 8
+```
+localhost:~# nano archive_ext
+
+ext="$1"
+tar -cf "archive_${ext}.tar" ./*."$ext"
+
+localhost:~# chmod +x archive_ext
+localhost:~# ./archive_ext txt
+
+```
+
+## Задание 9
+```
+localhost:~# nano spaces2tabs
+
+infile="$1"
+outfile="$2"
+sed 's/    /\t/g' "$infile" > "$outfile"
+
+localhost:~# chmod +x spaces2tabs
+localhost:~# ./spaces2tabs in.txt out.txt
+
+```
+
+## Задание 10
+```
+localhost:~# nano find_empty
+
+dir="$1"
+find "$dir" -type f -empty
+
+localhost:~# chmod +x find_empty
+localhost:~# ./find_empty .
+
+```
