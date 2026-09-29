@@ -6,6 +6,8 @@ localhost:~# grep -oE '^[^:]+' /etc/passwd | sort
 ```
 ## Задание 2
 ```
+localhost:~# cd /etc
+
 localhost:/etc# awk '{print $2, $1}' protocols | sort -nr | head -n 5
 
 localhost:/etc# cd ~
@@ -72,12 +74,36 @@ localhost:~# ./check_comment .
 ```
 localhost:~# nano find_dups
 
+#!/bin/bash
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <path>"
+    exit 1
+fi
+
 path="$1"
+
+if [ ! -d "$path" ]; then
+    echo "Ошибка: $path - не директория"
+    exit 1
+fi
+
 find "$path" -type f -exec md5sum {} + | sort | awk '
 {
-    hash=$1; $1=""; sub(/^ /,"")
-    if (hash in seen) { print seen[hash]; print $0; print "" }
-    seen[hash]=$0
+    hash = $1
+    $1 = ""
+    sub(/^ /, "")
+    files[hash] = files[hash] $0 "\n"
+    count[hash]++
+}
+END {
+    for (h in count) {
+        if (count[h] > 1) {
+            printf "Группа дубликатов (хэш %s):\n", h
+            printf "%s", files[h]
+            print ""
+        }
+    }
 }'
 
 localhost:~# chmod +x find_dups
@@ -113,10 +139,40 @@ localhost:~# ./spaces2tabs in.txt out.txt
 ## Задание 10
 ```
 localhost:~# nano find_empty
+#!/bin/bash
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <directory>"
+    exit 1
+fi
 
 dir="$1"
-find "$dir" -type f -empty
 
+if [ ! -d "$dir" ]; then
+    echo "Ошибка: $dir — не директория"
+    exit 1
+fi
+
+# Расширения, которые считаем текстовыми
+text_extensions="txt md log csv json xml html htm css js c cpp h hpp java py sh yaml yml ini conf cfg"
+
+find "$dir" -type f -empty -print0 | while IFS= read -r -d '' f; do
+    base="$(basename "$f")"
+    ext="${base##*.}"
+
+    if [ "$ext" = "$base" ]; then
+        # у файла нет точки в имени (например README, Makefile) — считаем текстовым
+        echo "$f"
+        continue
+    fi
+
+    for te in $text_extensions; do
+        if [ "$ext" = "$te" ]; then
+            echo "$f"
+            break
+        fi
+    done
+done
 localhost:~# chmod +x find_empty
 localhost:~# ./find_empty .
 
