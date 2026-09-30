@@ -139,39 +139,11 @@ localhost:~# ./spaces2tabs in.txt out.txt
 ## Задание 10
 ```
 localhost:~# nano find_empty
-#!/bin/bash
 
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 <directory>"
-    exit 1
-fi
+# ищем пустые .txt файлы в каталоге
+dir="${1:-.}"
+find "$dir" -maxdepth 1 -type f -empty -name "*.txt"
 
-dir="$1"
-
-if [ ! -d "$dir" ]; then
-    echo "Ошибка: $dir — не директория"
-    exit 1
-fi
-
-text_extensions="txt md log csv json xml html htm css js c cpp h hpp java py sh yaml yml ini conf cfg"
-
-find "$dir" -type f -empty -print0 | while IFS= read -r -d '' f; do
-    base="$(basename "$f")"
-    ext="${base##*.}"
-
-    if [ "$ext" = "$base" ]; then
-        
-        echo "$f"
-        continue
-    fi
-
-    for te in $text_extensions; do
-        if [ "$ext" = "$te" ]; then
-            echo "$f"
-            break
-        fi
-    done
-done
 localhost:~# chmod +x find_empty
 localhost:~# ./find_empty .
 
