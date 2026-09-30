@@ -153,7 +153,6 @@ if [ ! -d "$dir" ]; then
     exit 1
 fi
 
-# Расширения, которые считаем текстовыми
 text_extensions="txt md log csv json xml html htm css js c cpp h hpp java py sh yaml yml ini conf cfg"
 
 find "$dir" -type f -empty -print0 | while IFS= read -r -d '' f; do
@@ -161,7 +160,7 @@ find "$dir" -type f -empty -print0 | while IFS= read -r -d '' f; do
     ext="${base##*.}"
 
     if [ "$ext" = "$base" ]; then
-        # у файла нет точки в имени (например README, Makefile) — считаем текстовым
+        
         echo "$f"
         continue
     fi
