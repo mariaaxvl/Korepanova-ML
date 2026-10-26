@@ -1,4 +1,4 @@
-"""Точка входа эмулятора (этап 2: параметры командной строки)."""
+"""Точка входа эмулятора."""
 import argparse
 import os
 import sys
@@ -6,6 +6,7 @@ import sys
 from common import EXIT_OK
 from script import run_script
 from shell import Shell
+from vfs import VFS, VFSError
 
 TITLE = "VFS"
 
@@ -39,7 +40,11 @@ def window_title(args):
 
 def load_shell(args):
     """Создаёт Shell; возвращает (shell, текст ошибки)."""
-    return Shell(), ""
+    try:
+        vfs = VFS(args.vfs) if args.vfs else None
+    except VFSError as err:
+        return Shell(), f"error: {err}\n"
+    return Shell(vfs), ""
 
 
 def repl(shell):

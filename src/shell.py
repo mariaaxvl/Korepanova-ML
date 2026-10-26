@@ -7,12 +7,15 @@ from common import EXIT_NOT_FOUND, failure, success
 class Shell:
     """Состояние сеанса и выполнение введённых строк."""
 
-    def __init__(self):
+    def __init__(self, vfs=None):
+        self.vfs = vfs
+        self.cwd = []
         self.commands = COMMANDS
 
     def prompt(self):
-        """Приглашение к вводу."""
-        return "vfs:/$ "
+        """Приглашение к вводу с текущим каталогом."""
+        path = "/".join(self.cwd)
+        return f"vfs:/{path}$ "
 
     def execute(self, line):
         """Выполняет одну строку и возвращает Result."""
