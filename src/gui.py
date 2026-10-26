@@ -1,26 +1,33 @@
 """Графический терминал на tkinter."""
 import tkinter as tk
 
+from script import run_script
+
 BG = "#111111"
 FG = "#dddddd"
 PROMPT_FG = "#77ff77"
 FONT = ("Courier", 11)
 TEXT_HEIGHT = 28
 TEXT_WIDTH = 100
+START_DELAY_MS = 100
+CLOSE_DELAY_MS = 300
 
 
 class Terminal:
     """Окно, имитирующее терминал: журнал вывода и строка ввода."""
 
-    def __init__(self, root, shell, title, banner=""):
+    def __init__(self, root, shell, title, banner="", script=None):
         self.root = root
         self.shell = shell
+        self.script = script
         self.history = []
         self.hist_pos = 0
         root.title(title)
         self._build_widgets()
         self.write(banner)
         self.refresh_prompt()
+        if script:
+            root.after(START_DELAY_MS, self.start_script)
 
     def _build_widgets(self):
         """Создаёт журнал, приглашение и строку ввода."""
@@ -52,6 +59,13 @@ class Terminal:
     def refresh_prompt(self):
         """Обновляет текст приглашения."""
         self.prompt.config(text=self.shell.prompt())
+
+    def start_script(self):
+        """Выполняет стартовый скрипт; exit в скрипте закрывает окно."""
+        result = run_script(self.shell, self.script, self.write)
+        self.refresh_prompt()
+        if result and result.exit:
+            self.root.after(CLOSE_DELAY_MS, self.root.destroy)
 
     def on_enter(self, _event):
         """Выполняет введённую строку."""
