@@ -1,0 +1,14 @@
+# Не менее 3 уровней вложенности
+ls
+cd a/b/c
+pwd
+ls
+cd d
+pwd
+cd ../../..
+pwd
+cd /etc/config
+ls
+cd
+pwd
+exit

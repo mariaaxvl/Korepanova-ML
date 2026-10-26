@@ -1,0 +1,5 @@
+# Минимальная VFS: один файл
+pwd
+ls
+ls hello.txt
+exit

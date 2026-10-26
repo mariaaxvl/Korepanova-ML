@@ -1,0 +1,8 @@
+# Несколько файлов, каталог и двоичный файл
+ls
+ls docs
+cd docs
+pwd
+cd ..
+ls image.bin
+exit

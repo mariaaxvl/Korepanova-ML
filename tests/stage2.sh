@@ -13,9 +13,10 @@ echo "== 3. --script с комментариями =="
 $EMU --script tests/data/stage2_demo.txt
 echo "== 4. Остановка скрипта на ошибке =="
 $EMU --script tests/data/stop_on_error.txt < /dev/null
+python3 tests/make_vfs.py
 echo "== 5. Только --vfs =="
-echo exit | $EMU --vfs some/path/vfs.zip
+echo exit | $EMU --vfs tests/vfs/minimal.zip
 echo "== 6. Оба параметра =="
-$EMU --vfs some/path/vfs.zip --script tests/data/stage2_demo.txt
+$EMU --vfs tests/vfs/minimal.zip --script tests/data/stage2_demo.txt
 echo "== 7. Несуществующий скрипт =="
 echo exit | $EMU --script no_such_script.txt

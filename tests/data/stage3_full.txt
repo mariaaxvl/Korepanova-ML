@@ -1,0 +1,17 @@
+# Этап 3: все команды этапов 1-3 на VFS deep.zip, затем ошибка
+pwd
+ls
+ls a
+ls /etc/config
+ls root.txt
+cd a/b
+pwd
+ls
+cd ./c/../c/d
+pwd
+cd ../../../..
+cd $UNSET_VAR_XYZ
+pwd
+cd "a"
+cd /nonexistent
+ls
