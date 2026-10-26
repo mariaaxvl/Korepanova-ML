@@ -1,0 +1,8 @@
+# Этап 1: заглушки и переменные окружения
+ls
+ls -l /tmp
+cd /home/user
+cd $HOME
+ls "$HOME" '$HOME' ${USER}x
+cd "много слов" 'в кавычках'
+exit
